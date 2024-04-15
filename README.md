@@ -1,17 +1,27 @@
 # bubble-up
 
-or: declarative schema migrations for sqlite databases
+## declarative schema migrations for sqlite databases
 
 **NOTE**: this is proposal-ware.
 
+ollow and support this project:
+
+> [!NOTE]  
+> This is (currently) proposal-ware.  
+> Wanna make it happen? Support and follow this project on Polar:
+
+<p align="center">
+<a href="https://polar.sh/eval"><picture><source media="(prefers-color-scheme: dark)" srcset="https://polar.sh/embed/subscribe.svg?org=eval&label=Subscribe&darkmode"><img alt="Subscribe on Polar" src="https://polar.sh/embed/subscribe.svg?org=eval&label=Subscribe"></picture></a>
+</p>
+
 ## rationale
 
-SQLite databases are everywhere. According to their own website[^1] it's "the most widely deployed database in the world".
+**SQLite** databases are everywhere. According to their own website[^1] it's "the most widely deployed database in the world".
 A big factor in it's ubiquity is its ease of use: SQLite is an embedded database engine, hence it does not require a separate server process.
 
 While it's easy to start using SQLite, evolving the schema of the database is not. Often this requires a specific ORM/migration-library and (non-sql) code to define migrations.
 Another factor that makes schema evolution harder for SQLite than for, say, PostgreSQL, is it's limiting support for ALTER TABLE.
-E.g. while ALTER TABLE allows for a column to be renamed, changing a column's type (or default value, or NOT NULL) is not supported.
+E.g. while ALTER TABLE allows e.g. for a column to be renamed, changing a column's type (or default value, or NOT NULL) is not supported.  
 The official documentation acknowledges these limitations[^2] and describes a non-trivial 12-step process to make such changes. The described process (which comes with a caution to follow it *precisely*) comes down to creating a new table and migrating the existing data.
 
 This project aims at creating a CLI that would help you to evolve the database schema based on an existing sqlite database and the wanted schema.
@@ -67,7 +77,7 @@ create table "foo" (
 * removes column `foo.foo`  
 * adds column `foo.bar`  
   * sets value of `foo.bar` for existing rows to `'unknown'`
-* renames `foo.barr`->`foo.bar`
+* renames `foo.barr`->`foo.bar`  
   ...using the `--%` (bubble) annotations
 * recreates index `idx_foo_bar`
 * deletes table `baz`  
@@ -77,3 +87,11 @@ create table "foo" (
 # allow-deletions flag is typically only used in development
 bblup migrate --db db.sqlite --schema db_schema.sql --allow-deletions
 ```
+
+> [!NOTE]  
+> This is (currently) proposal-ware.  
+> Wanna make it happen? Support and follow this project on Polar:
+
+<p align="center">
+<a href="https://polar.sh/eval"><picture><source media="(prefers-color-scheme: dark)" srcset="https://polar.sh/embed/subscribe.svg?org=eval&label=Subscribe&darkmode"><img alt="Subscribe on Polar" src="https://polar.sh/embed/subscribe.svg?org=eval&label=Subscribe"></picture></a>
+</p>

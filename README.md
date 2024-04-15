@@ -69,7 +69,14 @@ create table "foo" (
 +);
 ```
 
-...the following changes are made to `db.sqlite`:
+When the following is run...:
+
+```
+# allow-deletions flag is typically only used in development
+bblup migrate --db db.sqlite --schema db_schema.sql --allow-deletions
+```
+
+...then the following changes are made to `db.sqlite`:
 * removes column `foo.foo`  
 * adds column `foo.bar`  
   * sets value of `foo.bar` for existing rows to `'unknown'`
@@ -79,10 +86,7 @@ create table "foo" (
 * deletes table `baz`  
 * adds table `baz`
   
-```
-# allow-deletions flag is typically only used in development
-bblup migrate --db db.sqlite --schema db_schema.sql --allow-deletions
-```
+
 
 > [!NOTE]  
 > This is (currently) proposal-ware.  

@@ -2,10 +2,6 @@
 
 ## declarative schema migrations for sqlite databases
 
-**NOTE**: this is proposal-ware.
-
-ollow and support this project:
-
 > [!NOTE]  
 > This is (currently) proposal-ware.  
 > Wanna make it happen? Support and follow this project on Polar:

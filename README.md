@@ -24,7 +24,7 @@ This project aims at creating a CLI that would help you to evolve the database s
 By comparing the existing and wanted schema (and existing data if needed), it deducts (and applies) any sql-statements that the sqlite database needs in order to get the wanted schema.
 Either this would consist of supported ALTER/CREATE/DROP statements or by generating all statements needed to go through the 12-step process.
 Possible ambiguity could be resolved by annotations in the schema-file. This would for example make a table or column rename possible.  
-The CLI should be easy to install (e.g. to make it convenient to use on CI). There should be an escape-hatch to allow for data-migrations in the form of running arbitrary sql pre- or post-migration.
+The CLI should be a single executable (e.g. to make it convenient to use on CI). There should be an escape-hatch to allow for data-migrations in the form of running arbitrary sql pre- or post-migration.
 
 
 [^1]: https://www.sqlite.org/mostdeployed.html
@@ -43,7 +43,7 @@ create table "foo" (
 CREATE UNIQUE INDEX idx_foo_bar ON foo(barr);
 
 create table "bar" (
-  [id] INTEGER PRIMARY KEY AUTOINCREMENT,
+  [id] INTEGER PRIMARY KEY AUTOINCREMENT
 );
 ```
 
@@ -51,9 +51,9 @@ create table "bar" (
 ```diff
 create table "foo" (
   [id] INTEGER PRIMARY KEY AUTOINCREMENT,
--  [foo] INTEGER
-+  [bar] TEXT NOT NULL DEFAULT 'unknown'
--  [barr] STRING
+-  [foo] INTEGER,
++  [baz] TEXT NOT NULL DEFAULT 'unknown',
+-  [barr] STRING,
 +  [bar] STRING --% renamed column=barr
 );
 
@@ -61,7 +61,7 @@ create table "foo" (
 +CREATE UNIQUE INDEX idx_foo_bar ON foo(bar);
 
 -create table "bar" (
--  [id] INTEGER PRIMARY KEY AUTOINCREMENT,
+-  [id] INTEGER PRIMARY KEY AUTOINCREMENT
 -);
 
 +create table "baz" (
@@ -69,7 +69,7 @@ create table "foo" (
 +);
 ```
 
-When the following is run...:
+When running...:
 
 ```
 # allow-deletions flag is typically only used in development
@@ -77,16 +77,15 @@ bblup migrate --db db.sqlite --schema db_schema.sql --allow-deletions
 ```
 
 ...then the following changes are made to `db.sqlite`:
-* removes column `foo.foo`  
-* adds column `foo.bar`  
-  * sets value of `foo.bar` for existing rows to `'unknown'`
-* renames `foo.barr`->`foo.bar`  
+* remove column `foo.foo`  
+* add column `foo.baz`  
+  * set value of `foo.baz` for existing rows to `'unknown'`
+* rename `foo.barr`->`foo.bar`  
   ...using the `--%` (bubble) annotations
-* recreates index `idx_foo_bar`
-* deletes table `baz`  
-* adds table `baz`
+* recreate index `idx_foo_bar`
+* delete table `bar`  
+* add table `baz`
   
-
 
 > [!NOTE]  
 > This is (currently) proposal-ware.  
@@ -95,3 +94,8 @@ bblup migrate --db db.sqlite --schema db_schema.sql --allow-deletions
 <p align="center">
 <a href="https://polar.sh/eval"><picture><source media="(prefers-color-scheme: dark)" srcset="https://polar.sh/embed/subscribe.svg?org=eval&label=Subscribe&darkmode"><img alt="Subscribe on Polar" src="https://polar.sh/embed/subscribe.svg?org=eval&label=Subscribe"></picture></a>
 </p>
+
+## inspiration
+
+- https://david.rothlis.net/declarative-schema-migration-for-sqlite/  
+  bubble-up aims to allow more operations (using notations) and being a drop-in executable.
